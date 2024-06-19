@@ -7,7 +7,7 @@ WORKDIR /var/www/html
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Install system dependencies
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -15,10 +15,43 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
-    zip
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo mbstring zip exif pcntl bcmath gd
+    libicu-dev \
+    zlib1g-dev \
+    libcurl4-gnutls-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libtidy-dev \
+    libxslt1-dev \
+    libgmp-dev \
+    libpspell-dev \
+    locales \
+    libbz2-dev \
+    libgmp-dev \
+    libtidy-dev \
+    libcurl4-openssl-dev \
+    libxpm-dev \
+    libvpx-dev \
+    libaspell-dev \
+    zip \
+    autoconf \
+    libc-dev \
+    pkg-config \
+    libmcrypt-dev \
+    && docker-php-ext-install pdo \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install calendar \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install gettext \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install iconv \
+    && docker-php-ext-install exif \
+    && docker-php-ext-install opcache \
+    && docker-php-ext-install pcntl \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-enable intl
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
