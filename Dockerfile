@@ -1,80 +1,45 @@
-# Use the official PHP image as a base
 FROM php:8.1-apache
+
+# Install required PHP extensions
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libpq-dev \
+    libzip-dev \
+    unzip \
+    zip \
+    && docker-php-ext-install \
+    intl \
+    calendar \
+    pdo_mysql
+
+# Enable apache mods and rewrite for Laravel
+RUN a2enmod rewrite
+
+# Install Composer globally
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libicu-dev \
-    zlib1g-dev \
-    libcurl4-gnutls-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libtidy-dev \
-    libxslt1-dev \
-    libgmp-dev \
-    libpspell-dev \
-    locales \
-    libbz2-dev \
-    libgmp-dev \
-    libtidy-dev \
-    libcurl4-openssl-dev \
-    libxpm-dev \
-    libvpx-dev \
-    libaspell-dev \
-    zip \
-    autoconf \
-    libc-dev \
-    pkg-config \
-    libmcrypt-dev \
-    && docker-php-ext-install pdo \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install calendar \
-    && docker-php-ext-install intl \
-    && docker-php-ext-install gettext \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install iconv \
-    && docker-php-ext-install exif \
-    && docker-php-ext-install opcache \
-    && docker-php-ext-install pcntl \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-enable intl
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Copy existing application directory contents
-COPY . .
+COPY . /var/www/html
 
-# Install Bagisto dependencies
+# Copy the PHP configuration file
+COPY php.ini /usr/local/etc/php/
+
+# Set bash as the default shell during build
+SHELL ["/bin/bash", "-c"]
+
+# Install composer dependencies
 RUN composer install
 
-# Run necessary artisan commands
-RUN su - www-data -s /bin/bash -c 'php artisan migrate' && \
-    su - www-data -s /bin/bash -c 'php artisan db:seed' && \
-    su - www-data -s /bin/bash -c 'php artisan vendor:publish --all' && \
-    su - www-data -s /bin/bash -c 'php artisan storage:link' && \
-    su - www-data -s /bin/bash -c 'composer dump-autoload'
+# Add the additional CMDs to be run on container start
+CMD service apache2 start && \
+    su - www-data -s /bin/bash -c 'php /var/www/html/bagisto/artisan migrate' && \
+    su - www-data -s /bin/bash -c 'php /var/www/html/bagisto/artisan db:seed' && \
+    su - www-data -s /bin/bash -c 'php /var/www/html/bagisto/artisan vendor:publish' && \
+    su - www-data -s /bin/bash -c 'php /var/www/html/bagisto/artisan storage:link' && \
+    su - www-data -s /bin/bash -c 'composer dump-autoload -d /var/www/html/bagisto' && \
+    tail -f /dev/null
 
-# Give permission to storage and bootstrap cache (if not already set)
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Expose port 80
 EXPOSE 80
-
-# Start Apache server
-CMD ["apache2-foreground"]
