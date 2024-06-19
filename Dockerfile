@@ -17,12 +17,14 @@ RUN apt-get update && apt-get install -y \
     pdo_mysql \
     gd \
     exif \
+    zip \
     && docker-php-ext-enable \
     intl \
     calendar \
     pdo_mysql \
     gd \
-    exif
+    exif \
+    zip
 
 
 # Enable apache mods and rewrite for Laravel
