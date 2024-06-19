@@ -46,7 +46,6 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Run Laravel artisan and composer commands
-RUN su - www-data -s /bin/bash -c 'php /var/www/html/artisan bagisto:install' 
 
 EXPOSE 80
 
