@@ -25,6 +25,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
+COPY . .
 # Install PHP dependencies with Composer
 RUN composer install
 
@@ -34,11 +35,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Run Laravel artisan and composer commands
-RUN su - www-data -s /bin/bash -c 'php /var/www/html/artisan migrate' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan db:seed' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan vendor:publish --all' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan storage:link' \
-    && su - www-data -s /bin/bash -c 'composer dump-autoload'
+RUN su - www-data -s /bin/bash -c 'php /var/www/html/artisan bagisto:install' 
 
 EXPOSE 80
 
