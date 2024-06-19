@@ -38,7 +38,7 @@ WORKDIR /var/www/html
 
 COPY . .
 # Install PHP dependencies with Composer
-RUN composer install
+RUN composer create
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html \
@@ -47,7 +47,7 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Run Laravel artisan and composer commands
 
-EXPOSE 80
+EXPOSE 8000
 
 # Start the apache server in the foreground
 CMD ["apache2-foreground"]
