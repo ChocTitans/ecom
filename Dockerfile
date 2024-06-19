@@ -7,14 +7,23 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     git \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     intl \
     calendar \
     pdo_mysql \
+    gd \
+    exif \
     && docker-php-ext-enable \
     intl \
     calendar \
-    pdo_mysql
+    pdo_mysql \
+    gd \
+    exif
+
 
 # Enable apache mods and rewrite for Laravel
 RUN a2enmod rewrite
