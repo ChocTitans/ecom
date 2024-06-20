@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 
 # Install required PHP extensions and other dependencies
@@ -6,14 +6,14 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     libwebp-dev \
+    libpng-dev \
+    libjpeg-dev \
     unzip \
     zip \
     git \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libpng-dev \
     && docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-freetype \
-    && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install \
     intl \
     calendar \
@@ -49,6 +49,8 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Run Laravel artisan and composer commands
+
+RUN docker-php-ext-install -j$(nproc) gd
 
 EXPOSE 8000
 
