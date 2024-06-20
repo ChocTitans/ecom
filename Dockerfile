@@ -1,25 +1,28 @@
 FROM php:8.1-apache
 
+
 # Install required PHP extensions and other dependencies
 RUN apt-get update && apt-get install -y \
-    libicu-dev \
-    libzip-dev \
-    libwebp-dev \
-    unzip \
-    zip \
-    git \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
+    libwebp-dev \
+    git \
+    zip \
+    unzip \
+    libfontconfig1-dev \
+    xclip \
     libpng-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure gd --with-webp \
-    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-webp-dir=/usr/include/  --with-jpeg-dir=/usr/include/ && \
+    && docker-php-ext-install -j$(nproc) gd
     && docker-php-ext-install \
     intl \
     calendar \
     pdo_mysql \
     gd \
     exif \
+    pcntl \
+    ldap \
+    sysvmsg \
     zip \
     && docker-php-ext-enable \
     intl \
