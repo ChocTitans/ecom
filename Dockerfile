@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
     && docker-php-ext-configure gd --with-webp \
-    && docker-php-ext-configure gd --with-png \
     && docker-php-ext-install \
     intl \
     calendar \
