@@ -41,6 +41,8 @@ WORKDIR /var/www/html
 
 COPY . .
 # Install PHP dependencies with Composer
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer dump-autoload
 
 RUN { \
