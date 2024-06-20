@@ -11,8 +11,14 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    --with-gd \
+    --with-jpeg-dir \
+    --with-png-dir \
+    --with-zlib-dir
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure gd --with-webp \
+    && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install \
     intl \
     calendar \
@@ -28,8 +34,13 @@ RUN apt-get update && apt-get install -y \
     exif \
     zip
 
-RUN docker-php-ext-install -j$(nproc) gd
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+--with-gd \
+--with-jpeg-dir \
+--with-png-dir \
+--with-zlib-dir
 
+RUN docker-php-ext-install -j$(nproc) gd
 
 # Enable apache mods and rewrite for Laravel
 RUN a2enmod rewrite
