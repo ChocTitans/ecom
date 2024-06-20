@@ -49,6 +49,8 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Run Laravel artisan and composer commands
 
+VOLUME ["/var/www/html"]
+
 EXPOSE 8000
 
 # Start the apache server in the foreground
