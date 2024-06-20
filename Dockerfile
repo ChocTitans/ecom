@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     git \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    && docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-freetype \
     && docker-php-ext-install \
     intl \
     calendar \
@@ -49,7 +48,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Run Laravel artisan and composer commands
-
+RUN docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype
 RUN docker-php-ext-install -j$(nproc) gd
 
 EXPOSE 8000
