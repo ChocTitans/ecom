@@ -3,14 +3,14 @@ FROM php:8.1-apache
 
 # Install required PHP extensions and other dependencies
 RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libzip-dev \
+    libwebp-dev \
+    unzip \
+    zip \
+    git \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libwebp-dev \
-    git \
-    zip \
-    unzip \
-    libfontconfig1-dev \
-    xclip \
     libpng-dev \
     && docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-freetype \
     && docker-php-ext-install -j$(nproc) gd \
@@ -21,8 +21,6 @@ RUN apt-get update && apt-get install -y \
     gd \
     exif \
     pcntl \
-    ldap \
-    sysvmsg \
     zip \
     && docker-php-ext-enable \
     intl \
