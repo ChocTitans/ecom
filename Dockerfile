@@ -47,8 +47,6 @@ RUN { \
     echo '#!/bin/bash'; \
     echo 'set -e'; \
     echo ''; \
-    echo '# Ensure the Composer autoload files are generated'; \
-    echo 'su - www-data -s /bin/bash -c "composer dump-autoload -o -d /var/www/html"'; \
     echo ''; \
     echo 'if [ ! -f /var/www/html/storage/installed ]; then'; \
     echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan migrate"'; \
