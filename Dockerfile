@@ -51,6 +51,7 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype
 RUN docker-php-ext-install -j$(nproc) gd
 
+ENV APP_DEBUG=false
 EXPOSE 8000
 
 # Start the apache server in the foreground
