@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     --with-gd \
     --with-jpeg-dir \
     --with-png-dir \
-    --with-zlib-dir
+    --with-zlib-dir \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure gd --with-webp \
     && docker-php-ext-install -j$(nproc) gd \
