@@ -41,10 +41,10 @@ WORKDIR /var/www/html
 
 COPY . .
 # Install PHP dependencies with Composer
-RUN php artisan migrate
-RUN php artisan db:seed
-RUN php artisan vendor:publish
-RUN php artisan storage:link
+RUN php /var/www/html/artisan migrate
+RUN php /var/www/html/artisan db:seed
+RUN php /var/www/html/artisan vendor:publish
+RUN php /var/www/html/artisan storage:link
 RUN composer dump-autoload
 
 # Set permissions for Laravel
