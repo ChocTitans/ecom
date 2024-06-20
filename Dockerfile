@@ -40,12 +40,14 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN echo '#!/bin/bash' > /usr/local/bin/entrypoint.sh \
     && echo 'set -e' >> /usr/local/bin/entrypoint.sh \
     && echo '' >> /usr/local/bin/entrypoint.sh \
+    && echo '# Ensure the Composer autoload files are generated' >> /usr/local/bin/entrypoint.sh \
+    && echo 'su - www-data -s /bin/bash -c "composer dump-autoload -o -d /var/www/html"' >> /usr/local/bin/entrypoint.sh \
+    && echo '' >> /usr/local/bin/entrypoint.sh \
     && echo 'if [ ! -f /var/www/html/storage/installed ]; then' >> /usr/local/bin/entrypoint.sh \
     && echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan migrate"' >> /usr/local/bin/entrypoint.sh \
     && echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan db:seed"' >> /usr/local/bin/entrypoint.sh \
     && echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan vendor:publish --force"' >> /usr/local/bin/entrypoint.sh \
     && echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan storage:link"' >> /usr/local/bin/entrypoint.sh \
-    && echo '    su - www-data -s /bin/bash -c "composer dump-autoload -d /var/www/html"' >> /usr/local/bin/entrypoint.sh \
     && echo '    touch /var/www/html/storage/installed' >> /usr/local/bin/entrypoint.sh \
     && echo 'fi' >> /usr/local/bin/entrypoint.sh \
     && echo '' >> /usr/local/bin/entrypoint.sh \
