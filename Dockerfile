@@ -44,13 +44,11 @@ COPY . .
 RUN composer dump-autoload
 
 CMD ["sh", "-c", "
-    if [ ! -f /var/www/html/storage/installed ]; then
-        su - www-data -s /bin/bash -c 'php /var/www/html/artisan migrate' \
-        && su - www-data -s /bin/bash -c 'php /var/www/html/artisan db:seed' \
-        && su - www-data -s /bin/bash -c 'php /var/www/html/artisan vendor:publish --force' \
-        && su - www-data -s /bin/bash -c 'php /var/www/html/artisan storage:link' \
-        && touch /var/www/html/storage/installed;
-    fi
+    su - www-data -s /bin/bash -c 'php /var/www/html/artisan migrate' \
+    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan db:seed' \
+    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan vendor:publish --force' \
+    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan storage:link' \
+    && touch /var/www/html/storage/installed;
     apache2-foreground
 "]
 
