@@ -4,6 +4,7 @@ FROM php:8.1-apache
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
+    libwebp-dev \
     unzip \
     zip \
     git \
@@ -11,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     libpng-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-webp \
     && docker-php-ext-install \
     intl \
     calendar \
