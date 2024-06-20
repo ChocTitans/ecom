@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure gd --with-webp --with-png \
+    && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-webp \
+    && docker-php-ext-configure gd --with-png \
     && docker-php-ext-install \
     intl \
     calendar \
@@ -27,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     gd \
     exif \
     zip
-    
+
 RUN docker-php-ext-install -j$(nproc) gd
 
 
