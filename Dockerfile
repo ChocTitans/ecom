@@ -43,14 +43,24 @@ COPY . .
 # Install PHP dependencies with Composer
 RUN composer dump-autoload
 
-CMD ["sh", "-c", "
-    su - www-data -s /bin/bash -c 'php /var/www/html/artisan migrate' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan db:seed' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan vendor:publish --force' \
-    && su - www-data -s /bin/bash -c 'php /var/www/html/artisan storage:link' \
-    && touch /var/www/html/storage/installed;
-    apache2-foreground
-"]
+RUN { \
+    echo '#!/bin/bash'; \
+    echo 'set -e'; \
+    echo ''; \
+    echo '# Ensure the Composer autoload files are generated'; \
+    echo 'su - www-data -s /bin/bash -c "composer dump-autoload -o -d /var/www/html"'; \
+    echo ''; \
+    echo 'if [ ! -f /var/www/html/storage/installed ]; then'; \
+    echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan migrate"'; \
+    echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan db:seed"'; \
+    echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan vendor:publish --force"'; \
+    echo '    su - www-data -s /bin/bash -c "php /var/www/html/artisan storage:link"'; \
+    echo '    touch /var/www/html/storage/installed'; \
+    echo 'fi'; \
+    echo ''; \
+    echo 'apache2-foreground'; \
+} > /usr/local/bin/docker-entrypoint.sh \
+    && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html \
@@ -64,4 +74,4 @@ VOLUME ["/var/www/html"]
 EXPOSE 8000
 
 # Start the apache server in the foreground
-CMD ["apache2-foreground"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
