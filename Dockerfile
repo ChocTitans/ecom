@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     libfontconfig1-dev \
     xclip \
     libpng-dev \
-    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-webp=/usr/include/  --with-jpeg=/usr/include/  \
+    && docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install \
     intl \
